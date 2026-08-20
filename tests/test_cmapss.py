@@ -10,7 +10,15 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+from pdm import paths
 from pdm.data import cmapss
+
+# Mirrors the guard in test_ncmapss.py: the NASA archive is not committed, so
+# these skip where it is absent and run in full where it has been downloaded.
+pytestmark = pytest.mark.skipif(
+    not (paths.CMAPSS_RAW / "train_FD001.txt").exists(),
+    reason="C-MAPSS archive not present (not committed)",
+)
 
 
 @pytest.fixture(scope="module")
