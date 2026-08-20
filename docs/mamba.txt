@@ -1,0 +1,55 @@
+Stage 1 — Build raw sequence pipeline
+
+Not:
+
+per-flight means,
+summary features.
+
+Instead:
+
+raw sensor sequences,
+downsampled maybe 1Hz → 0.2Hz,
+fixed chunks,
+multichannel temporal streams.
+
+Example:
+
+sequence length: 2048
+channels: 30–50 sensors
+Stage 2 — SSL pretraining objective
+
+Good objectives:
+
+Masked reconstruction
+
+Predict masked sensor spans.
+
+VERY effective for industrial time-series.
+
+Next-step forecasting
+
+Predict future sequence chunks.
+
+Contrastive temporal learning
+
+Different views of same flight = positive pairs.
+
+Multi-resolution prediction
+
+Predict:
+
+short horizon,
+medium horizon,
+degradation trend.
+Stage 3 — Mamba backbone
+
+This is where Mamba becomes interesting.
+
+Advantages over Transformers:
+
+Mamba	Transformer
+Linear scaling	Quadratic scaling
+Longer context feasible	Memory explodes
+Better for continuous signals	Optimized for tokens
+Faster training	Slower
+Lower VRAM	Higher VRAM

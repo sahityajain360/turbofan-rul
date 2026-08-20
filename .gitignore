@@ -1,0 +1,41 @@
+# secrets
+.env
+.env.*
+!.env.example
+credentials/
+*_token.txt
+*_secret.txt
+*api_key*.txt
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# data & artefacts
+*.parquet
+*.pkl
+*.cbm
+*.pt
+*.pth
+*.onnx
+*.h5
+*.joblib
+*.zip
+data/
+models/
+downloads/
+catboost_info/
+mlruns/
+wandb/
+
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

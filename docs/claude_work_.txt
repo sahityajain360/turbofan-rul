@@ -1,0 +1,52 @@
+Let me read your Mamba idea doc and check the WSL/data situation in parallel.
+
+Read
+mamba.txt
+The doc's plan is sound and aligns with Mamba's strengths — I'll build on it. Let me check the environment: WSL availability, disk space, and what N-CMAPSS data is extracted.
+
+Checked WSL, disk, and N-CMAPSS extraction state
+Here's the situation:
+
+WSL2 is enabled but has no distro installed — so I need to install Ubuntu. (You're right that WSL is the path: mamba-ssm's CUDA kernels don't build on native Windows; WSL2+CUDA is the standard, and faster.)
+Disk: 156 GB free — plenty to extract all of N-CMAPSS (~26 GB).
+Only DS02 is extracted; DS01 + DS03–08 are still in the inner zip.
+Your plan in mamba.txt is solid; I'll build on it. Let me kick off the two long-running, independent setup steps now — extracting all sub-datasets, and listing WSL distros to install Ubuntu:
+
+
+Ran 4 commands
+Ubuntu is available. Before installing, let me confirm the --no-launch flag is supported (so I can set it up non-interactively as root, avoiding the interactive username/password prompt that would hang):
+
+Checked wsl install flags support
+--no-launch is supported. Installing Ubuntu now (no-launch so it won't hang on interactive user setup — I'll operate as root):
+
+Installed Ubuntu WSL distro non-interactively
+Background shell completed
+Extract all N-CMAPSS DS .h5 files (background)
+Both done — Ubuntu installed and all DS files extracted. Now the critical checks: root access in WSL and (most important) GPU passthrough — without it, Mamba is pointless. Plus confirm the extraction:
+
+Verified WSL root, GPU passthrough, and extracted data
+The distro name may differ from "Ubuntu". Let me list what's actually registered:
+
+Listed installed WSL distros with exact names
+The --no-launch --web-download combo downloaded the package but didn't fully register the distro (it registers on first launch, which is interactive). The clean non-interactive fix is Ubuntu's launcher with install --root (registers without the interactive user prompt). Let me find the launcher:
+
+Located the Ubuntu WSL launcher executable
+ubuntu.exe found. Registering the distro as root (non-interactive, no user prompt):
+
+Registered Ubuntu as root via launcher
+Ubuntu registered (WSL2, running). Now the make-or-break check — GPU passthrough and basic tooling:
+
+Verified GPU, Python, and project file access in WSL
+GPU passthrough works — RTX 3070, 8 GB, visible in WSL — plus Python 3.10.6 and direct /mnt/d access to the project (all 10 .h5 files). That's the hard part cleared.
+
+Now the environment build. I'll set up an isolated venv in WSL with CUDA PyTorch + the data stack, then add mamba-ssm. Let me write the base setup script (and use PYTHONPATH to reuse our pdm package directly from /mnt/d — no reinstall needed):
+
+Created
+wsl_setup_base.sh
++29
+-0
+Launching the base env setup in WSL (background — torch is a ~2.5 GB download):
+
+Ran
+Run WSL base env setup (torch + data stack) in background
+Base setup is downloading in the background. While it runs, let me line up the tricky part — the exact mamba-ssm/causal-conv1d prebuilt wheel URLs for torch 2.4 + CUDA 12 + Python 3.10 (so I don't have to compile). Let me load WebFetch:

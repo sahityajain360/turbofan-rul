@@ -1,0 +1,25 @@
+# C-MAPSS dataset configuration (source of truth for run params)
+dataset: C-MAPSS
+raw_dir: data/raw/CMAPSSData
+interim_dir: data/interim
+
+# Each *_FDxxx.txt is whitespace-separated, no header, 26 columns:
+#   unit, cycle, op_setting_1..3, sensor_1..21
+schema:
+  index: [unit, cycle]
+  op_settings: [op_setting_1, op_setting_2, op_setting_3]
+  sensors:
+    [sensor_1, sensor_2, sensor_3, sensor_4, sensor_5, sensor_6, sensor_7,
+     sensor_8, sensor_9, sensor_10, sensor_11, sensor_12, sensor_13, sensor_14,
+     sensor_15, sensor_16, sensor_17, sensor_18, sensor_19, sensor_20, sensor_21]
+
+subdatasets:
+  FD001: { operating_conditions: 1, fault_modes: 1 }   # easiest
+  FD002: { operating_conditions: 6, fault_modes: 1 }   # multi-regime
+  FD003: { operating_conditions: 1, fault_modes: 2 }   # multi-fault
+  FD004: { operating_conditions: 6, fault_modes: 2 }   # hardest
+
+# Labeling / modeling
+rul_cap: 125          # piecewise-linear RUL clip; healthy regime stays flat at the cap
+val_fraction: 0.2     # engine-wise validation split fraction
+split_seed: 42
