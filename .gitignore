@@ -27,12 +27,12 @@ venv/
 *.h5
 *.joblib
 *.zip
-data/
-models/
-downloads/
-catboost_info/
-mlruns/
-wandb/
+/data/
+/models/
+/downloads/
+/catboost_info/
+/mlruns/
+/wandb/
 
 # os / editor
 .DS_Store
