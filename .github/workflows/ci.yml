@@ -24,6 +24,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          # requirements.txt leaves torch out because the dev box installs the
+          # CUDA build. CI only needs it to import, so take the CPU wheel.
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install h5py
           pip install -e . pytest
       - name: Run tests
         run: pytest -q
